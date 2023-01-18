@@ -9,7 +9,7 @@ class ConfigParser:
     def __init__(self, cfg_type, platform):
         self.config = configparser.ConfigParser()
         if cfg_type == 'credentials':
-            self.config.read('../config/src/credentials.cfg')
+            self.config.read('config/src/credentials.cfg')
             self.credentials = None
             if platform == 'twitter':
                 self.consumer_key = None
@@ -17,12 +17,13 @@ class ConfigParser:
                 self.access_token = None
                 self.access_token_secret = None
         elif cfg_type == 'settings':
-            self.config.read('../config/src/settings.cfg')
+            self.config.read('config/src/settings.cfg')
             self.settings = None
             if platform == 'twitter':
                 self.count = None
                 self.screen_names = None
-                self.table_name = None
+                self.database = None
+                self.table = None
 
     def get_credentials(self, platform):
         if platform == 'twitter':
@@ -39,13 +40,16 @@ class ConfigParser:
         return self.credentials
 
     def get_settings(self, channel):
-        if channel == 'King_County_Twitter':
+        if channel == 'king_county_twitter':
             # Read values from the 'Twitter API' section
-            self.count = self.config['KingCountyTwitter']['count']
-            self.screen_names = self.config['KingCountyTwitter']['screen_names'].split(',')
-            self.table_name = self.config['KingCountyTwitter']['table_name']
+            self.count = self.config['King_County_Twitter']['count']
+            self.screen_names = self.config['King_County_Twitter']['screen_names'].split(',')
+            self.database = self.config['King_County_Twitter']['database']
+            self.table = self.config['King_County_Twitter']['table']
             self.settings = {'count': self.count,
                              'screen_names': self.screen_names,
-                             'table_name': self.table_name,
+                             'database': self.database,
+                             'table': self.table,
                              }
         return self.settings
+

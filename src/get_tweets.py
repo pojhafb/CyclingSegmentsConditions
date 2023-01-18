@@ -18,6 +18,10 @@ class GetTweetsFromAccounts:
         self.auth.set_access_token(access_token, access_token_secret)
         self.api = tweepy.API(self.auth)
 
+        self.auth = tweepy.OAuthHandler(consumer_key, consumer_secret)
+        self.auth.set_access_token(access_token, access_token_secret)
+        self.api = tweepy.API(self.auth)
+
         self.data = None
 
     def get_tweets_from_account(self, settings):
@@ -27,27 +31,26 @@ class GetTweetsFromAccounts:
         screen_names = settings['screen_names']
         count = settings['count']
         for screen_name in screen_names:
-            self.tweets_obj_list.append(
-                self.api.user_timeline(
-                    screen_name=screen_name,
-                    count=count)
-            )
+            print(screen_name)
+            for tweet in tweepy.Cursor(self.api.user_timeline, screen_name=str(screen_name)).items(int(count)):
+                self.tweets_obj_list.append(tweet)
 
     def get_dataframe_from_tweets(self):
         """
         Converts a list of tweets to a Pandas DataFrame.
         """
         self.tweets_df = pd.DataFrame(self.data)
-        for tweets in self.tweets_obj_list:
+        for tweet in self.tweets_obj_list:
             data = {
-                'created_at': [tweet.created_at for tweet in tweets],
-                'text': [tweet.text for tweet in tweets],
-                'retweet_count': [tweet.retweet_count for tweet in tweets],
-                'favorite_count': [tweet.favorite_count for tweet in tweets],
-                'screen_name': [tweet.user.screen_name for tweet in tweets],
-                'location': [tweet.user.location for tweet in tweets],
+                'created_at': tweet.created_at,
+                'text': tweet.text,
+                'retweet_count': tweet.retweet_count,
+                'favorite_count': tweet.favorite_count,
+                'screen_name': tweet.user.screen_name,
+                'location': tweet.user.location,
             }
-            self.tweets_df = self.tweets_df.append(data, ignore_index=True)
+            # self.tweets_df = self.tweets_df.append(data, ignore_index=True)
+            self.tweets_df = pd.concat([self.tweets_df, pd.DataFrame([data])], ignore_index=True)
 
     def load_data_to_tables(self, settings):
         conn = sqlite3.connect(settings['database'])

@@ -8,7 +8,7 @@ def main():
     twitter_credentials_cfg = ConfigParser('credentials', 'twitter')
     twitter_credentials = twitter_credentials_cfg.get_credentials('twitter')
     king_county_twitter_settings_cfg = ConfigParser('settings', 'twitter')
-    king_county_twitter_settings = king_county_twitter_settings_cfg.get_settings('twitter')
+    king_county_twitter_settings = king_county_twitter_settings_cfg.get_settings('king_county_twitter')
 
     twitter_data = GetTweetsFromAccounts(twitter_credentials['consumer_key'],
                                          twitter_credentials['consumer_secret'],
@@ -16,9 +16,9 @@ def main():
                                          twitter_credentials['access_token_secret'],
                                          )
     # Get tweets for king co
-    tweets = twitter_data.get_tweets(settings=king_county_twitter_settings)
+    twitter_data.get_tweets_from_account(settings=king_county_twitter_settings)
     # Convert king co tweets to a Pandas DataFrame
-    twitter_data.tweets_to_dataframe()
+    twitter_data.get_dataframe_from_tweets()
     # load tweets_df to table
     twitter_data.load_data_to_tables(settings=king_county_twitter_settings)
 
