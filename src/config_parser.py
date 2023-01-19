@@ -16,6 +16,10 @@ class ConfigParser:
                 self.consumer_secret = None
                 self.access_token = None
                 self.access_token_secret = None
+            if platform == 'strava':
+                self.access_token = None
+            if platform == 'google_maps':
+                self.google_maps_api_key = None
         elif cfg_type == 'settings':
             self.config.read('config/src/settings.cfg')
             self.settings = None
@@ -37,6 +41,12 @@ class ConfigParser:
                                 'access_token': self.access_token,
                                 'access_token_secret': self.access_token_secret,
                                 }
+        if platform == 'strava':
+            self.access_token = self.config['Strava']['access_token']
+            self.credentials = {'access_token': self.access_token}
+        if platform == 'google_maps':
+            self.consumer_key = self.config['Google_Maps']['google_maps_api_key']
+            self.credentials = {'consumer_key': self.consumer_key}
         return self.credentials
 
     def get_settings(self, channel):

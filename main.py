@@ -22,6 +22,12 @@ def main():
     # load tweets_df to table
     twitter_data.load_data_to_tables(settings=king_county_twitter_settings)
 
+    # Strava segments to Google maps roads mapping
+    strava_credentials_cfg = ConfigParser('credentials', 'strava')
+    strava_credentials = strava_credentials_cfg.get_credentials('strava')
+    google_maps_credentials_cfg = ConfigParser('credentials', 'google_maps')
+    google_maps_credentials = google_maps_credentials_cfg.get_credentials('google_maps')
+
 
 if __name__ == '__main__':
     main()
