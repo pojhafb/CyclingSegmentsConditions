@@ -31,7 +31,6 @@ class GetTweetsFromAccounts:
         screen_names = settings['screen_names']
         count = settings['count']
         for screen_name in screen_names:
-            print(screen_name)
             for tweet in tweepy.Cursor(self.api.user_timeline, screen_name=str(screen_name)).items(int(count)):
                 self.tweets_obj_list.append(tweet)
 
